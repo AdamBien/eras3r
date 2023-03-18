@@ -1,5 +1,7 @@
 package airhacks;
 
+import java.util.Optional;
+
 import airhacks.eras3r.boundary.BucketEraser;
 
 /**
@@ -8,8 +10,12 @@ import airhacks.eras3r.boundary.BucketEraser;
  */
 interface Eras3r {
 
-    static void usage(){
-        System.out.println("invoke with arguments: [bucketname] [true]");
+    static boolean invalidArguments(String... args) {
+        if (args.length == 0 || args.length > 2) {
+            System.out.println("invoke with arguments: [bucketname] [true]");
+            return true;
+        }
+        return false;
     }
 
     static boolean isBucketDeletion(String... args) {
@@ -18,9 +24,15 @@ interface Eras3r {
         return Boolean.parseBoolean(args[1]);
     }
 
+    static String bucketName(String... args) {
+        return args[0];
+    }
+
     static void main(String... args) {
-        var bucketName = args[0];
+        if (invalidArguments(args))
+            return;
+        var bucketName = bucketName(args);
         var deleteBucket = isBucketDeletion(args);
-        BucketEraser.eraseBucketContents(bucketName,deleteBucket);
+        BucketEraser.eraseBucketContents(bucketName, deleteBucket);
     }
 }
