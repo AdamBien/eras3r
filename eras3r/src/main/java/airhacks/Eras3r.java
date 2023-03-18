@@ -6,7 +6,11 @@ import airhacks.eras3r.boundary.BucketEraser;
  *
  * @author airhacks.com
  */
-interface App {
+interface Eras3r {
+
+    static void usage(){
+        System.out.println("invoke with arguments: [bucketname] [true]");
+    }
 
     static boolean isBucketDeletion(String... args) {
         if (args.length <= 1)
@@ -16,6 +20,7 @@ interface App {
 
     static void main(String... args) {
         var bucketName = args[0];
-        BucketEraser.eraseBucketContents(bucketName);
+        var deleteBucket = isBucketDeletion(args);
+        BucketEraser.eraseBucketContents(bucketName,deleteBucket);
     }
 }

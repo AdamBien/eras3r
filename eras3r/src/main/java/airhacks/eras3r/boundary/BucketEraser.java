@@ -11,7 +11,7 @@ import software.amazon.awssdk.services.s3.model.S3Object;
 
 public interface BucketEraser {
 
-    static void eraseBucketContents(String bucketName) {
+    static void eraseBucketContents(String bucketName,boolean deleteBucket) {
         try (var client = S3Client.create()) {
             var listRequest = ListObjectsV2Request.builder().bucket(bucketName).build();
             var s3Objects = client.listObjectsV2(listRequest).contents();

@@ -18,7 +18,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>airhacks.App</mainClass>
+                            <mainClass>airhacks.Eras3r</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
