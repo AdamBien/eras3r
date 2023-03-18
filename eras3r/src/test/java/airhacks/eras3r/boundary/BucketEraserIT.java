@@ -1,15 +1,16 @@
 package airhacks.eras3r.boundary;
 
-import org.junit.jupiter.api.AfterAll;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import airhacks.eras3r.control.BucketsDiscoverer;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.BucketVersioningStatus;
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
-import software.amazon.awssdk.services.s3.model.DeleteBucketRequest;
 import software.amazon.awssdk.services.s3.model.PutBucketVersioningRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.VersioningConfiguration;
@@ -52,10 +53,11 @@ public class BucketEraserIT {
         client.putObject(request, RequestBody.fromBytes("java".getBytes()));
         client.putObject(request, RequestBody.fromBytes("java 2".getBytes()));
     }
-
-
+    
     @Test
     void testEraseBucketContents() {
+        assertTrue(BucketsDiscoverer.bucketExists(client, bucketName));
         BucketEraser.eraseBucketContents(bucketName,true);
+        assertFalse(BucketsDiscoverer.bucketExists(client, bucketName));
     }
 }
