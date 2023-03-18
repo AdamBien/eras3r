@@ -1,12 +1,11 @@
 package airhacks.eras3r.control;
 
-import java.util.List;
 import java.util.stream.Stream;
 
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.Bucket;
 import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
-import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 public interface BucketsDiscoverer {
 
@@ -22,7 +21,7 @@ public interface BucketsDiscoverer {
         try {
             var response = client.headBucket(headBucketRequest);
             return response.sdkHttpResponse().statusCode() == 200;
-        } catch (NoSuchBucketException ex) {
+        } catch (S3Exception ex) {
             return false;
         }
     }

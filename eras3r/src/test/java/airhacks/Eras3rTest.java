@@ -1,5 +1,6 @@
 package airhacks;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -12,4 +13,12 @@ public class Eras3rTest {
         assertFalse(Eras3r.isBucketDeletion("bucketname","false"));
         assertFalse(Eras3r.isBucketDeletion("bucketname","anything"));
     }
+
+    @Test
+    void bucketName() {
+        var expected = "duke";
+        var actual = Eras3r.bucketName(expected,"something else");
+        assertThat(actual).isEqualTo(expected);
+    }
+
 }

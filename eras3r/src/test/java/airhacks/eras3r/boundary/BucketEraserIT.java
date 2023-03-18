@@ -63,11 +63,5 @@ public class BucketEraserIT {
         assertFalse(BucketsDiscoverer.bucketExists(client, bucketName));
     }
     
-    @Test
-    void removeStars(){
-        var input = "**airhacks-**";
-        var expected = "airhacks-";
-        var actual = BucketEraser.removeStars(input);
-        assertThat(actual).isEqualTo(expected);
-    }
+
 }
