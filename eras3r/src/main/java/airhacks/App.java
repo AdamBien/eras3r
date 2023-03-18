@@ -8,9 +8,9 @@ import airhacks.eras3r.boundary.BucketEraser;
  */
 interface App {
 
+
     static void main(String... args) {
         var bucketName = args[0];
-        var eraser = new BucketEraser();
-        eraser.eraseBucketContents(bucketName);
+        BucketEraser.eraseBucketContents(bucketName);
     }
 }
