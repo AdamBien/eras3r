@@ -5,6 +5,10 @@ public interface Logging {
         System.out.println(message);
     }
 
+    static void debug(String message) {
+        log(message);
+    }
+
     static void log(Object message) {
         System.out.println(message);
     }

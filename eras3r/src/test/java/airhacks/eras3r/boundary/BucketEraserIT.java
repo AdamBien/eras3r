@@ -1,5 +1,6 @@
 package airhacks.eras3r.boundary;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import airhacks.eras3r.control.BucketsDiscoverer;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.Bucket;
 import software.amazon.awssdk.services.s3.model.BucketVersioningStatus;
 import software.amazon.awssdk.services.s3.model.CreateBucketRequest;
 import software.amazon.awssdk.services.s3.model.PutBucketVersioningRequest;
@@ -53,11 +55,19 @@ public class BucketEraserIT {
         client.putObject(request, RequestBody.fromBytes("java".getBytes()));
         client.putObject(request, RequestBody.fromBytes("java 2".getBytes()));
     }
-    
+
     @Test
-    void testEraseBucketContents() {
+    void eraseBucketContents() {
         assertTrue(BucketsDiscoverer.bucketExists(client, bucketName));
         BucketEraser.eraseBucketContents(bucketName,true);
         assertFalse(BucketsDiscoverer.bucketExists(client, bucketName));
+    }
+    
+    @Test
+    void removeStars(){
+        var input = "**airhacks-**";
+        var expected = "airhacks-";
+        var actual = BucketEraser.removeStars(input);
+        assertThat(actual).isEqualTo(expected);
     }
 }

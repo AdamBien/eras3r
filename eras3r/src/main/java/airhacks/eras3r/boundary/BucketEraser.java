@@ -8,21 +8,24 @@ import software.amazon.awssdk.services.s3.S3Client;
 
 public interface BucketEraser {
     private static boolean isDeleteBucketsWithName(String bucketName) {
-        return bucketName.startsWith("**") && bucketName.endsWith("**");
+        return bucketName.startsWith("\"**") && bucketName.endsWith("**\"");
     }
 
     static void eraseBucketContents(String bucketName, boolean deleteBucket) {
         try (var client = S3Client.create()) {
             if (isDeleteBucketsWithName(bucketName)) {
+                Logging.log("deleting single bucket: %s".formatted(bucketName));
                 deleteSingleBucket(client, bucketName, deleteBucket);
             } else {
-                deleteMultipleBucketsMatching(null, bucketName, deleteBucket);
+                var bucketNameFragment = removeStars(bucketName);
+                Logging.log("deleting multiple buckets matching %s".formatted(bucketNameFragment));
+                deleteMultipleBucketsMatching(client, bucketNameFragment, deleteBucket);
             }
         }
     }
 
     static void deleteSingleBucket(S3Client client, String bucketName, boolean deleteBucket) {
-        if (!BucketsDiscoverer.bucketExists(client, bucketName)) {
+        if (!BucketsDiscoverer.checkExistence(client, bucketName)) {
             Logging.log("bucket %s does not exist".formatted(bucketName));
             return;
         }
@@ -37,6 +40,12 @@ public interface BucketEraser {
         BucketsDiscoverer
                 .listBucketsContaining(client, bucketName)
                 .forEach(currentName -> deleteSingleBucket(client, currentName, deleteBucket));
+    }
+
+    static String removeStars(String placeHolder) {
+        return placeHolder
+                .replace("**", "")
+                .replace("\"", "");
     }
 
 }

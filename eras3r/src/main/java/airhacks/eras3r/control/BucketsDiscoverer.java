@@ -5,6 +5,8 @@ import java.util.stream.Stream;
 
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.Bucket;
+import software.amazon.awssdk.services.s3.model.HeadBucketRequest;
+import software.amazon.awssdk.services.s3.model.NoSuchBucketException;
 
 public interface BucketsDiscoverer {
 
@@ -15,6 +17,16 @@ public interface BucketsDiscoverer {
                 .isPresent();
     }
 
+    static boolean checkExistence(S3Client client, String bucketName) {
+        var headBucketRequest = HeadBucketRequest.builder().bucket(bucketName).build();
+        try {
+            var response = client.headBucket(headBucketRequest);
+            return response.sdkHttpResponse().statusCode() == 200;
+        } catch (NoSuchBucketException ex) {
+            return false;
+        }
+    }
+
     static Stream<String> listBuckets(S3Client client) {
         return client.listBuckets()
                 .buckets()
@@ -22,8 +34,9 @@ public interface BucketsDiscoverer {
                 .map(Bucket::name);
     }
 
-    static Stream<String> listBucketsContaining(S3Client client, String bucketName){
+    static Stream<String> listBucketsContaining(S3Client client, String bucketName) {
         return listBuckets(client)
-        .filter(currentName -> currentName.contains(bucketName));
+                .peek(Logging::debug)
+                .filter(currentName -> currentName.contains(bucketName));
     }
 }
