@@ -53,19 +53,9 @@ public class BucketEraserIT {
         client.putObject(request, RequestBody.fromBytes("java 2".getBytes()));
     }
 
-    @BeforeEach
-    void init() {
-        eraser = new BucketEraser();
-    }
 
     @Test
     void testEraseBucketContents() {
-        this.eraser.eraseBucketContents(bucketName);
-    }
-
-    @AfterAll
-    static void deleteBucket(){
-        var deleteRequest = DeleteBucketRequest.builder().bucket(bucketName).build();
-        client.deleteBucket(deleteRequest);
+        BucketEraser.eraseBucketContents(bucketName,true);
     }
 }
