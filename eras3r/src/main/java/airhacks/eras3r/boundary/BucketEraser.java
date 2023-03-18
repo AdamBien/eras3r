@@ -7,19 +7,20 @@ import airhacks.eras3r.control.ObjectsRemover;
 import software.amazon.awssdk.services.s3.S3Client;
 
 public interface BucketEraser {
-    static boolean isDeleteBucketsWithName(String bucketName) {
+    static boolean isDeleteBucketsWithNameContaining(String bucketName) {
         return bucketName.startsWith("\"**") && bucketName.endsWith("**\"");
     }
 
     static void eraseBucketContents(String bucketName, boolean deleteBucket) {
         try (var client = S3Client.create()) {
-            if (!isDeleteBucketsWithName(bucketName)) {
-                Logging.log("deleting single bucket: %s".formatted(bucketName));
-                deleteSingleBucket(client, bucketName, deleteBucket);
-            } else {
+            if (isDeleteBucketsWithNameContaining(bucketName)) {
                 var bucketNameFragment = removeStars(bucketName);
                 Logging.log("deleting multiple buckets matching %s".formatted(bucketNameFragment));
                 deleteMultipleBucketsMatching(client, bucketNameFragment, deleteBucket);
+
+            } else {
+                Logging.log("deleting single bucket: %s".formatted(bucketName));
+                deleteSingleBucket(client, bucketName, deleteBucket);
             }
         }
     }

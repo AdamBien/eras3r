@@ -13,4 +13,8 @@ public interface Logging {
         System.out.println(message);
     }
 
+    static void info(String message) {
+        log(message);
+    }
+
 }

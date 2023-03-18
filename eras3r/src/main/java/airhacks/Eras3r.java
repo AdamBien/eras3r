@@ -3,6 +3,7 @@ package airhacks;
 import java.util.Optional;
 
 import airhacks.eras3r.boundary.BucketEraser;
+import airhacks.eras3r.control.Logging;
 
 /**
  *
@@ -29,6 +30,7 @@ interface Eras3r {
     }
 
     static void main(String... args) {
+        Logging.info("eras3r v0.0.1");
         if (invalidArguments(args))
             return;
         var bucketName = bucketName(args);
