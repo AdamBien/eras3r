@@ -2,8 +2,10 @@ package airhacks.eras3r.boundary;
 
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.Delete;
+import software.amazon.awssdk.services.s3.model.DeleteBucketRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest;
+import software.amazon.awssdk.services.s3.model.DeletedObject;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
 import software.amazon.awssdk.services.s3.model.S3Object;
@@ -27,7 +29,7 @@ public class BucketEraser {
                 .peek(this::log)
                 .map(this::toIdentifier)
                 .toList();
-        if(s3Keys.isEmpty()){
+        if (s3Keys.isEmpty()) {
             System.out.println("bucket %s is empty".formatted(bucketName));
             return;
         }
@@ -35,14 +37,20 @@ public class BucketEraser {
         var delete = Delete.builder()
                 .objects(s3Keys)
                 .build();
-                
+
         var deleteRequest = DeleteObjectsRequest
                 .builder()
                 .bucket(bucketName)
                 .delete(delete)
                 .build();
 
-        this.client.deleteObjects(deleteRequest);
+        var response = this.client.deleteObjects(deleteRequest);
+        log("deleted objects");
+
+        response.deleted()
+                .stream()
+                .map(DeletedObject::key)
+                .forEach(this::log);
     }
 
     ObjectIdentifier toIdentifier(String objectName) {
@@ -59,7 +67,7 @@ public class BucketEraser {
         this.client.deleteObject(deleteRequest);
     }
 
-    void log(String message){
+    void log(String message) {
         System.out.println(message);
     }
 
