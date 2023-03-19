@@ -1,0 +1,40 @@
+name: eras3r native build
+on: [push]
+jobs:
+  native-build:
+      name: native ${{ matrix.os }} build
+      runs-on: ${{ matrix.os }}
+      strategy:
+        matrix:
+          os: [macos-latest, windows-latest, ubuntu-latest]
+      steps:
+        - name: checkout code
+          uses: actions/checkout@v3
+        - uses: graalvm/setup-graalvm@v1
+          with:
+            version: '22.3'
+            java-version: '17'
+            components: 'native-image'
+            github-token: ${{ secrets.GITHUB_TOKEN }}
+        - name: environment check
+          run: |
+            echo "GRAALVM_HOME: $GRAALVM_HOME"
+            echo "JAVA_HOME: $JAVA_HOME"
+            java --version
+        - name: native build
+          run: cd eras3r && buildNativeImage.sh
+        - name: upload unix binaries
+          if: ${{matrix.os != 'windows-latest'}}
+          uses: actions/upload-artifact@v3
+          with:
+            name: eras3r-${{ matrix.os }}
+            path: eras3r/target/eras3r-runner
+            if-no-files-found: error
+        - name: upload windows binary
+          if: ${{matrix.os == 'windows-latest'}}
+          uses: actions/upload-artifact@v3
+          with:
+            name: eras3r-${{ matrix.os }}
+            path: eras3r/target/eras3r-runner.exe
+            if-no-files-found: error
+
