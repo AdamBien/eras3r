@@ -21,8 +21,10 @@ jobs:
             echo "GRAALVM_HOME: $GRAALVM_HOME"
             echo "JAVA_HOME: $JAVA_HOME"
             java --version
+        - name: maven build
+          run: eras3r/mvn package
         - name: native build
-          run: eras3r/buildNativeImage.sh
+          run: eras3r/native-image -jar target/eras3r.jar%  
         - name: upload unix binaries
           if: ${{matrix.os != 'windows-latest'}}
           uses: actions/upload-artifact@v3
