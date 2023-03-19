@@ -22,7 +22,7 @@ jobs:
             echo "JAVA_HOME: $JAVA_HOME"
             java --version
         - name: native build
-          run: cd eras3r && buildNativeImage.sh
+          run: eras3r/buildNativeImage.sh
         - name: upload unix binaries
           if: ${{matrix.os != 'windows-latest'}}
           uses: actions/upload-artifact@v3
