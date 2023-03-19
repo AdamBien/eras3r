@@ -1,7 +1,7 @@
 name: eras3r native build
 on: [push]
 jobs:
-  native-build:
+    build:
       name: native ${{ matrix.os }} build
       runs-on: ${{ matrix.os }}
       strategy:
@@ -16,6 +16,7 @@ jobs:
             java-version: '17'
             components: 'native-image'
             github-token: ${{ secrets.GITHUB_TOKEN }}
+            native-image-job-reports: 'true'
         - name: environment check
           run: |
             echo "GRAALVM_HOME: $GRAALVM_HOME"
