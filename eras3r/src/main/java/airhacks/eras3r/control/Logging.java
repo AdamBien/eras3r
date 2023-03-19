@@ -17,4 +17,8 @@ public interface Logging {
         log(message);
     }
 
+    static void warning(String message) {
+        log(message);
+    }
+
 }
