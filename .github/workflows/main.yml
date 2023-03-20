@@ -25,7 +25,7 @@ jobs:
         - name: maven build
           run: eras3r/mvn package
         - name: native build
-          run: eras3r/native-image -jar target/eras3r.jar%  
+          run: eras3r/native-image -jar target/eras3r.jar
         - name: upload unix binaries
           if: ${{matrix.os != 'windows-latest'}}
           uses: actions/upload-artifact@v3
@@ -40,4 +40,3 @@ jobs:
             name: eras3r-${{ matrix.os }}
             path: eras3r/target/eras3r-runner.exe
             if-no-files-found: error
-
