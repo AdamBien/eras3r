@@ -1,7 +1,5 @@
 package airhacks;
 
-import java.util.Optional;
-
 import airhacks.eras3r.boundary.BucketEraser;
 import airhacks.eras3r.control.Logging;
 

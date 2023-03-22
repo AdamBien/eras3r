@@ -14,7 +14,11 @@ public interface Logging {
     }
 
     static void info(String message) {
-        log(message);
+        var formattedMessage = "%s%s%s".formatted(
+                TerminalColors.INFO.code(),
+                message,
+                TerminalColors.RESET.code());
+        log(formattedMessage);
     }
 
     static void warning(String message) {
