@@ -4,6 +4,9 @@ jobs:
     build:
       name: native ${{ matrix.os }} build
       runs-on: ${{ matrix.os }}
+      defaults:
+        run:
+          working-directory: ./eras3r
       strategy:
         matrix:
           os: [macos-latest, windows-latest, ubuntu-latest]
@@ -23,9 +26,9 @@ jobs:
             echo "JAVA_HOME: $JAVA_HOME"
             java --version
         - name: maven build
-          run: eras3r/mvn package
+          run: mvn package
         - name: native build
-          run: eras3r/native-image -jar target/eras3r.jar
+          run: native-image -jar target/eras3r.jar
         - name: upload unix binaries
           if: ${{matrix.os != 'windows-latest'}}
           uses: actions/upload-artifact@v3
