@@ -34,12 +34,12 @@ jobs:
           uses: actions/upload-artifact@v3
           with:
             name: eras3r-${{ matrix.os }}
-            path: eras3r/target/eras3r-runner
+            path: eras3r/eras3r
             if-no-files-found: error
         - name: upload windows binary
           if: ${{matrix.os == 'windows-latest'}}
           uses: actions/upload-artifact@v3
           with:
             name: eras3r-${{ matrix.os }}
-            path: eras3r/target/eras3r-runner.exe
+            path: eras3r/eras3r.exe
             if-no-files-found: error
