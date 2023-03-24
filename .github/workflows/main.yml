@@ -26,7 +26,7 @@ jobs:
             echo "JAVA_HOME: $JAVA_HOME"
             java --version
         - name: maven build
-          run: mvn package
+          run: mvn --no-transfer-progress package
         - name: native build
           run: native-image -jar target/eras3r.jar
         - name: upload unix binaries
@@ -47,5 +47,5 @@ jobs:
           uses: actions/upload-artifact@v3
           with:
             name: eras3r.jar
-            path: target/eras3r.jar
+            path: eras3r/target/eras3r.jar
             if-no-files-found: error
