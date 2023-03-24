@@ -43,3 +43,9 @@ jobs:
             name: eras3r-${{ matrix.os }}
             path: eras3r/eras3r.exe
             if-no-files-found: error
+        - name: upload JAR
+          uses: actions/upload-artifact@v3
+          with:
+            name: eras3r.jar
+            path: target/eras3r.jar
+            if-no-files-found: error
