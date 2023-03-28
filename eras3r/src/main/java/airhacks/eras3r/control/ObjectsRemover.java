@@ -8,8 +8,10 @@ import software.amazon.awssdk.services.s3.model.DeleteMarkerEntry;
 import software.amazon.awssdk.services.s3.model.DeleteObjectsRequest;
 import software.amazon.awssdk.services.s3.model.DeletedObject;
 import software.amazon.awssdk.services.s3.model.ListObjectVersionsRequest;
+import software.amazon.awssdk.services.s3.model.ListObjectVersionsResponse;
 import software.amazon.awssdk.services.s3.model.ObjectIdentifier;
 import software.amazon.awssdk.services.s3.model.ObjectVersion;
+import software.amazon.awssdk.services.s3.paginators.ListObjectVersionsIterable;
 
 public interface ObjectsRemover {
 
@@ -19,30 +21,37 @@ public interface ObjectsRemover {
                 .builder()
                 .bucket(bucketName)
                 .build();
-        var listObjectResponse = client.listObjectVersions(listRequest);
-        var s3Keys = listObjectResponse
-                .versions()
-                .stream()
-                .limit(1000)
-                .map(ObjectsRemover::toIdentifier)
-                .toList();
+        var listObjectResponse = client.listObjectVersionsPaginator(listRequest);
 
+        listObjectResponse.stream()
+                .map(ListObjectVersionsResponse::versions)
+                .map(ObjectsRemover::versionsToIdentifier)
+                .forEach(batch -> ObjectsRemover.deleteBatch(client, listObjectResponse, bucketName, batch));
+        
+    }
+
+    private static List<ObjectIdentifier> versionsToIdentifier(List<ObjectVersion> versions){
+        return versions.stream().map(ObjectsRemover::toIdentifier).toList();
+    }
+
+    private static void deleteBatch(S3Client client, ListObjectVersionsIterable listObjectResponse, String bucketName,List<ObjectIdentifier> s3Keys){
+        Logging.info("deleting next %d objects".formatted(s3Keys.size()));
         if (s3Keys.isEmpty()) {
-            System.out.println("bucket %s is empty".formatted(bucketName));
+            Logging.info("bucket %s is empty".formatted(bucketName));
         } else {
             deleteObjects(client, bucketName, s3Keys);
         }
 
-        s3Keys = listObjectResponse.deleteMarkers()
+        var deleteMarkerKeys = listObjectResponse.deleteMarkers()
                 .stream()
                 .map(ObjectsRemover::toIdentifier)
-                .peek(Logging::log)
                 .toList();
 
-        if (s3Keys.isEmpty()) {
-            System.out.println("no delete markers are available in bucket: %s".formatted(bucketName));
+        if (deleteMarkerKeys.isEmpty()) {
+            Logging.info("no delete markers are available in bucket: %s".formatted(bucketName));
         } else {
-            deleteObjects(client, bucketName, s3Keys);
+            Logging.info("removing %d delete marker keys".formatted(deleteMarkerKeys.size()));
+            deleteObjects(client, bucketName, deleteMarkerKeys);
         }
 
     }
