@@ -7,13 +7,13 @@ eras3r removes a S3 bucket with all its contents. Also works on buckets with ver
 
 # usage
 
-`eras3r [bucketname] [RB!!!]`
+`eras3r [bucketname] [--remove-bucket]`
 
 or
 
-`java -jar target/eras3r.jar [bucketname] [RB!!!]`
+`java -jar target/eras3r.jar [bucketname] [--remove-bucket]`
 
-the argument: `RB!!!` will also remove the bucket
+the argument: `--remove-bucket` will also remove the bucket
 
 # build
 

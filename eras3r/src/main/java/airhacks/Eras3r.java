@@ -8,11 +8,11 @@ import airhacks.eras3r.control.Logging;
  * @author airhacks.com
  */
 interface Eras3r {
-    static final String REMOVE_BUCKET = "RB!!!";
+    static final String REMOVE_BUCKET = "--remove-bucket";
 
     static boolean invalidArguments(String... args) {
         if (args.length == 0 || args.length > 2) {
-            System.out.println("invoke with arguments: [bucketname] [RB!!!]");
+            System.out.println("invoke with arguments: [bucketname] [%s]".formatted(REMOVE_BUCKET));
             return true;
         }
         return false;

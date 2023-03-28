@@ -6,8 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import software.amazon.awssdk.services.s3.model.Bucket;
-
 public class BucketEraserTest {
 
     @Test
