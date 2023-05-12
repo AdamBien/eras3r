@@ -31,7 +31,9 @@ public interface ObjectsRemover {
     }
 
     private static List<ObjectIdentifier> versionsToIdentifier(List<ObjectVersion> versions){
-        return versions.stream().map(ObjectsRemover::toIdentifier).toList();
+        return versions.stream()
+        .map(ObjectsRemover::toIdentifier)
+        .toList();
     }
 
     private static void deleteBatch(S3Client client, ListObjectVersionsIterable listObjectResponse, String bucketName,List<ObjectIdentifier> s3Keys){
