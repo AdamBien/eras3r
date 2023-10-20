@@ -1,5 +1,8 @@
 package airhacks;
 
+import java.util.Optional;
+import java.util.stream.Stream;
+
 import airhacks.eras3r.boundary.BucketEraser;
 import airhacks.eras3r.control.Logging;
 
@@ -23,26 +26,36 @@ interface Eras3r {
             return false;
         var command = args[1];
         Logging.info("parameter for bucket removal: " + command);
-        var removal =  REMOVE_BUCKET
-                .equals(args[1]);
-        if(removal){
+        var removal = Stream
+                .of(args)
+                .filter(arg -> arg.equals(REMOVE_BUCKET))
+                .findAny()
+                .isPresent();
+        if (removal) {
             Logging.warning("bucket is going to be deleted");
-        }else{
+        } else {
             Logging.warning("deleting bucket's contents");
         }
         return removal;
     }
 
-    static String bucketName(String... args) {
-        return args[0];
+    static Optional<String> bucketName(String... args) {
+        return Stream
+                .of(args)
+                .filter(arg -> !arg.startsWith("--"))
+                .findFirst();
     }
 
     static void main(String... args) {
-        Logging.info("eras3r v0.0.3");
+        Logging.info("eras3r v0.0.4");
         if (invalidArguments(args))
             return;
         var bucketName = bucketName(args);
+        if (bucketName.isEmpty()) {
+            Logging.warning("bucket name is not specified");
+            return;
+        }
         var deleteBucket = isBucketDeletion(args);
-        BucketEraser.eraseBucketContents(bucketName, deleteBucket);
+        BucketEraser.eraseBucketContents(bucketName.get(), deleteBucket);
     }
 }

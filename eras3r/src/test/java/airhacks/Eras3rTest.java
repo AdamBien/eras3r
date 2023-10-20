@@ -10,6 +10,7 @@ public class Eras3rTest {
     @Test
     void isBucketDeletion() {
         assertTrue(Eras3r.isBucketDeletion("bucketname","--remove-bucket"));
+        assertTrue(Eras3r.isBucketDeletion("--remove-bucket","bucketname"));
         assertFalse(Eras3r.isBucketDeletion("bucketname","false"));
         assertFalse(Eras3r.isBucketDeletion("bucketname","anything"));
     }
@@ -18,7 +19,8 @@ public class Eras3rTest {
     void bucketName() {
         var expected = "duke";
         var actual = Eras3r.bucketName(expected,"something else");
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).isNotEmpty();
+        assertThat(actual.get()).isEqualTo(expected);
     }
 
 }
