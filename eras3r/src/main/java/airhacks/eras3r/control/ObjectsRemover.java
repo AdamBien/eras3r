@@ -15,6 +15,8 @@ import software.amazon.awssdk.services.s3.paginators.ListObjectVersionsIterable;
 
 public interface ObjectsRemover {
 
+    public static final int MAX_ELEMENTS = 999;
+
     static void eraseBucketContents(S3Client client, String bucketName, boolean deleteBucket) {
         Logging.log("deleting contents and %s bucket?: %b".formatted(bucketName, deleteBucket));
         var listRequest = ListObjectVersionsRequest
@@ -23,7 +25,10 @@ public interface ObjectsRemover {
                 .build();
         var listObjectResponse = client.listObjectVersionsPaginator(listRequest);
 
-        listObjectResponse.stream()
+        listObjectResponse
+                .stream()
+                .parallel()
+                .limit(MAX_ELEMENTS)
                 .map(ListObjectVersionsResponse::versions)
                 .map(ObjectsRemover::versionsToIdentifier)
                 .forEach(batch -> ObjectsRemover.deleteBatch(client, listObjectResponse, bucketName, batch));
@@ -44,8 +49,11 @@ public interface ObjectsRemover {
             deleteObjects(client, bucketName, s3Keys);
         }
 
-        var deleteMarkerKeys = listObjectResponse.deleteMarkers()
+        var deleteMarkerKeys = listObjectResponse
+                .deleteMarkers()
                 .stream()
+                .parallel()
+                .limit(MAX_ELEMENTS)
                 .map(ObjectsRemover::toIdentifier)
                 .toList();
 
