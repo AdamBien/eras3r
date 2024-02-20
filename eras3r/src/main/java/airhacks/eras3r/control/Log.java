@@ -1,31 +1,28 @@
 package airhacks.eras3r.control;
 
-
+import java.io.PrintStream;
 
 public enum Log {
 
-    DEBUG("\033[0;90m"),
-    INFO("\033[0;33m"),
-    TRACE("\033[2;34m"),
-    WARNING("\033[0;97m"), 
-    ERROR("\033[0;41m");
+    DEBUG("\033[0;90m",System.out),
+    INFO("\033[0;33m",System.out),
+    TRACE("\033[2;34m",System.out),
+    WARNING("\033[1;31m",System.out), 
+    ERROR("\033[0;41m",System.err);
 
-    private final String value;
+    private final String template;
+    private PrintStream out;
     private final static String RESET = "\u001B[0m";
 
-    private Log(String value) {
-        this.value = (value + "%s" + RESET);
-    }
+    private Log(String level,PrintStream out) {
+        this.template = (level + "%s" + RESET);
+        this.out = out;
 
-    public String formatted(String raw) {
-        return this.value.formatted(raw);
     }
 
     public void out(String message) {
-        stdout(formatted(message));
+        var colored = this.template.formatted(message);
+        out.println(colored);
     }
 
-    private void stdout(String message) {
-        System.out.println(message);
-    }
 }

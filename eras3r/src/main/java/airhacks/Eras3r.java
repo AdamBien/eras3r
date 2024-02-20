@@ -47,7 +47,7 @@ interface Eras3r {
     }
 
     static void main(String... args) {
-        Log.INFO.out("eras3r v0.0.8");
+        Log.INFO.out("eras3r v0.0.9");
         if (invalidArguments(args))
             return;
         var bucketName = bucketName(args);
