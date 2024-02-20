@@ -18,7 +18,7 @@ public interface ObjectsRemover {
     public static final int MAX_ELEMENTS = 999;
 
     static void eraseBucketContents(S3Client client, String bucketName, boolean deleteBucket) {
-        Logging.log("deleting contents and %s bucket?: %b".formatted(bucketName, deleteBucket));
+        Log.WARNING.out("deleting contents and %s bucket?: %b".formatted(bucketName, deleteBucket));
         var listRequest = ListObjectVersionsRequest
                 .builder()
                 .bucket(bucketName)
@@ -42,9 +42,9 @@ public interface ObjectsRemover {
     }
 
     private static void deleteBatch(S3Client client, ListObjectVersionsIterable listObjectResponse, String bucketName,List<ObjectIdentifier> s3Keys){
-        Logging.info("deleting next %d objects".formatted(s3Keys.size()));
+        Log.INFO.out("deleting next %d objects".formatted(s3Keys.size()));
         if (s3Keys.isEmpty()) {
-            Logging.info("bucket %s is empty".formatted(bucketName));
+            Log.INFO.out("bucket %s is empty".formatted(bucketName));
         } else {
             deleteObjects(client, bucketName, s3Keys);
         }
@@ -58,9 +58,9 @@ public interface ObjectsRemover {
                 .toList();
 
         if (deleteMarkerKeys.isEmpty()) {
-            Logging.info("no delete markers are available in bucket: %s".formatted(bucketName));
+            Log.INFO.out("no delete markers are available in bucket: %s".formatted(bucketName));
         } else {
-            Logging.info("removing %d delete marker keys".formatted(deleteMarkerKeys.size()));
+            Log.INFO.out("removing %d delete marker keys".formatted(deleteMarkerKeys.size()));
             deleteObjects(client, bucketName, deleteMarkerKeys);
         }
 
@@ -78,12 +78,12 @@ public interface ObjectsRemover {
                 .build();
 
         var response = client.deleteObjects(deleteRequest);
-        Logging.log("objects deleted");
+        Log.INFO.out("objects deleted");
 
         response.deleted()
                 .stream()
                 .map(DeletedObject::key)
-                .forEach(Logging::log);
+                .forEach(Log.INFO::out);
 
     }
 

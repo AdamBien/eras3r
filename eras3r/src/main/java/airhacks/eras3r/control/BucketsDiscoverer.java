@@ -35,7 +35,7 @@ public interface BucketsDiscoverer {
 
     static Stream<String> listBucketsContaining(S3Client client, String bucketName) {
         return listBuckets(client)
-                .peek(Logging::debug)
+                .peek(Log.DEBUG::out)
                 .filter(currentName -> currentName.contains(bucketName));
     }
 }
