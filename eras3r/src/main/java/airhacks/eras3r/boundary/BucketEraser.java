@@ -8,7 +8,7 @@ import software.amazon.awssdk.services.s3.S3Client;
 
 public interface BucketEraser {
     static boolean isDeleteBucketsWithNameContaining(String bucketName) {
-        return bucketName.startsWith("\"**") && bucketName.endsWith("**\"");
+        return bucketName.startsWith("**") && bucketName.endsWith("**");
     }
 
     static void eraseBucketContents(String bucketName, boolean deleteBucket) {

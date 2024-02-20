@@ -19,7 +19,7 @@ public class BucketEraserTest {
     @Test
     void removisDeleteBucketsWithNameeStars(){
         assertFalse(BucketEraser.isDeleteBucketsWithNameContaining("duke"));
-        assertTrue(BucketEraser.isDeleteBucketsWithNameContaining("\"**duke**\""));
+        assertTrue(BucketEraser.isDeleteBucketsWithNameContaining("**duke**"));
     }
 
 }
