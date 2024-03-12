@@ -15,7 +15,11 @@ interface Eras3r {
 
     static boolean invalidArguments(String... args) {
         if (args.length == 0 || args.length > 2) {
-            System.out.println("invoke with arguments: [bucketname] [%s]".formatted(REMOVE_BUCKET));
+            Log.INFO.out(
+            """
+                invoke with arguments: [bucketname] [%s]
+                use **[pattern]** to delete multiple buckets
+            """.formatted(REMOVE_BUCKET));
             return true;
         }
         return false;
@@ -47,7 +51,7 @@ interface Eras3r {
     }
 
     static void main(String... args) {
-        Log.INFO.out("eras3r v0.0.9");
+        Log.INFO.out("eras3r v0.0.10");
         if (invalidArguments(args))
             return;
         var bucketName = bucketName(args);
