@@ -18,7 +18,7 @@ interface Eras3r {
             Log.INFO.out(
             """
                 invoke with arguments: [bucketname] [%s]
-                use **[pattern]** to delete multiple buckets
+                use "**[partial bucket name]**" to delete multiple buckets
             """.formatted(REMOVE_BUCKET));
             return true;
         }
@@ -51,7 +51,7 @@ interface Eras3r {
     }
 
     static void main(String... args) {
-        Log.INFO.out("eras3r v0.0.10");
+        Log.INFO.out("eras3r v0.0.11");
         if (invalidArguments(args))
             return;
         var bucketName = bucketName(args);
