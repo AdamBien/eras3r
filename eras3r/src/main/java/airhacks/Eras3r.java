@@ -11,7 +11,8 @@ import airhacks.eras3r.control.Log;
  * @author airhacks.com
  */
 interface Eras3r {
-    static final String REMOVE_BUCKET = "--remove-bucket";
+    int PARALLELISM = 50;
+    String REMOVE_BUCKET = "--remove-bucket";
 
     static boolean invalidArguments(String... args) {
         if (args.length == 0 || args.length > 2) {
@@ -51,8 +52,8 @@ interface Eras3r {
     }
 
     static void main(String... args) {
-        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "500");
-        Log.INFO.out("eras3r v0.0.12");
+        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", String.valueOf(PARALLELISM));
+        Log.INFO.out("eras3r v0.0.13");
         if (invalidArguments(args))
             return;
         var bucketName = bucketName(args);
