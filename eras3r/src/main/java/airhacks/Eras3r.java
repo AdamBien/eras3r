@@ -51,7 +51,8 @@ interface Eras3r {
     }
 
     static void main(String... args) {
-        Log.INFO.out("eras3r v0.0.11");
+        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "500");
+        Log.INFO.out("eras3r v0.0.12");
         if (invalidArguments(args))
             return;
         var bucketName = bucketName(args);
