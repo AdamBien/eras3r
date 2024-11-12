@@ -17,8 +17,7 @@ public interface ObjectsRemover {
 
     public static final int MAX_ELEMENTS = 999;
 
-    static void eraseBucketContents(S3Client client, String bucketName, boolean deleteBucket) {
-        Log.WARNING.out("deleting contents and %s bucket?: %b".formatted(bucketName, deleteBucket));
+    static void eraseBucketContents(S3Client client, String bucketName) {
         var listRequest = ListObjectVersionsRequest
                 .builder()
                 .bucket(bucketName)

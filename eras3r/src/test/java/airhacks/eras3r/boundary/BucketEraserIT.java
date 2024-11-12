@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import airhacks.Eras3r.Mode;
 import airhacks.eras3r.control.BucketsDiscoverer;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -57,7 +58,7 @@ public class BucketEraserIT {
     @Test
     void eraseBucketContents() {
         assertTrue(BucketsDiscoverer.bucketExists(client, bucketName));
-        BucketEraser.eraseBucketContents(bucketName,true);
+        BucketEraser.eraseBucketContents(bucketName,Mode.DELETE_CONTENTS);
         assertFalse(BucketsDiscoverer.bucketExists(client, bucketName));
     }
     

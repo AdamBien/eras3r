@@ -6,13 +6,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import airhacks.Eras3r.Mode;
+
 public class Eras3rTest {
     @Test
     void isBucketDeletion() {
-        assertTrue(Eras3r.isBucketDeletion("bucketname","--remove-bucket"));
-        assertTrue(Eras3r.isBucketDeletion("--remove-bucket","bucketname"));
-        assertFalse(Eras3r.isBucketDeletion("bucketname","false"));
-        assertFalse(Eras3r.isBucketDeletion("bucketname","anything"));
+        assertThat(Eras3r.deletionMode("bucketname","--remove-bucket")).isEqualTo(Mode.DELETE_BUCKET);
+        assertThat(Eras3r.deletionMode("--remove-bucket","bucketname")).isEqualTo(Mode.DELETE_BUCKET);
+        assertThat(Eras3r.deletionMode("bucketname","false")).isEqualTo(Mode.DELETE_CONTENTS);
+        assertThat(Eras3r.deletionMode("bucketname","anything")).isEqualTo(Mode.DELETE_CONTENTS);
+        assertThat(Eras3r.deletionMode("bucketname","anything")).isEqualTo(Mode.DELETE_CONTENTS);
+    }
+
+    @Test
+    void isExpiration() {
+        assertThat(Eras3r.deletionMode("bucketname","--expire-contents")).isEqualTo(Mode.EXPIRE_CONTENTS);
+
     }
 
     @Test
