@@ -1,5 +1,7 @@
 package airhacks.eras3r.boundary;
 
+import java.util.List;
+
 import airhacks.Eras3r.Mode;
 import airhacks.eras3r.control.BucketRemover;
 import airhacks.eras3r.control.BucketsDiscoverer;
@@ -10,6 +12,7 @@ import software.amazon.awssdk.services.s3.model.BucketLifecycleConfiguration;
 import software.amazon.awssdk.services.s3.model.ExpirationStatus;
 import software.amazon.awssdk.services.s3.model.LifecycleExpiration;
 import software.amazon.awssdk.services.s3.model.LifecycleRule;
+import software.amazon.awssdk.services.s3.model.LifecycleRuleFilter;
 
 public interface BucketEraser {
     static boolean isDeleteBucketsWithNameContaining(String bucketName) {
@@ -20,13 +23,14 @@ public interface BucketEraser {
         var lifecycleRule = LifecycleRule.builder()
                 .id("ExpirationRule")
                 .status(ExpirationStatus.ENABLED)
+                .filter(LifecycleRuleFilter.builder().build()) 
                 .expiration(LifecycleExpiration.builder()
                         .days(expirationDays)
                         .build())
                 .build();
 
         var lifecycleConfig = BucketLifecycleConfiguration.builder()
-                .rules(lifecycleRule)
+                .rules(List.of(lifecycleRule))
                 .build();
 
         client.putBucketLifecycleConfiguration(req -> req
