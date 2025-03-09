@@ -62,7 +62,7 @@ public interface BucketEraser {
         }
 
         if (mode.equals(Mode.EXPIRE_CONTENTS)) {
-            Log.INFO.out("expiring contents of bucket " + bucketName)
+            Log.INFO.out("expiring contents of bucket " + bucketName);
             expireObjectsWithLifecycleRule(client, bucketName, 1);
             return;
         }
