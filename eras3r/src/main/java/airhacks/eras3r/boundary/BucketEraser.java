@@ -27,6 +27,7 @@ public interface BucketEraser {
                 .filter(LifecycleRuleFilter.builder().build())
                 .expiration(LifecycleExpiration.builder()
                         .days(expirationDays)
+                        .expiredObjectDeleteMarker(true)
                         .build())
                 .noncurrentVersionExpiration(NoncurrentVersionExpiration.builder()
                         .noncurrentDays(expirationDays)
