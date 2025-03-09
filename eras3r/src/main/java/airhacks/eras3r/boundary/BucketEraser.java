@@ -8,6 +8,7 @@ import airhacks.eras3r.control.BucketsDiscoverer;
 import airhacks.eras3r.control.Log;
 import airhacks.eras3r.control.ObjectsRemover;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.AbortIncompleteMultipartUpload;
 import software.amazon.awssdk.services.s3.model.BucketLifecycleConfiguration;
 import software.amazon.awssdk.services.s3.model.ExpirationStatus;
 import software.amazon.awssdk.services.s3.model.LifecycleExpiration;
@@ -31,6 +32,9 @@ public interface BucketEraser {
                         .build())
                 .noncurrentVersionExpiration(NoncurrentVersionExpiration.builder()
                         .noncurrentDays(expirationDays)
+                        .build())
+                .abortIncompleteMultipartUpload(AbortIncompleteMultipartUpload.builder()
+                        .daysAfterInitiation(expirationDays)
                         .build())
                 .build();
 
