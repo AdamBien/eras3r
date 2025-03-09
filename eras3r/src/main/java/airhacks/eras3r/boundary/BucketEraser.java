@@ -62,16 +62,16 @@ public interface BucketEraser {
         }
 
         if (mode.equals(Mode.EXPIRE_CONTENTS)) {
-            Log.INFO.out("expiring contents of bucket " + bucketName);
+            Log.WARNING.out("expiring contents of bucket " + bucketName);
             expireObjectsWithLifecycleRule(client, bucketName, 1);
             return;
         }
         if (mode.equals(Mode.DELETE_CONTENTS)) {
-            Log.INFO.out("deleting contents of bucket " + bucketName);
+            Log.WARNING.out("deleting contents of bucket " + bucketName);
             ObjectsRemover.eraseBucketContents(client, bucketName);
         }
         if (mode.equals(Mode.DELETE_BUCKET)) {
-            Log.INFO.out("deleting bucket " + bucketName);
+            Log.WARNING.out("deleting bucket " + bucketName);
             BucketRemover.removeBucket(client, bucketName);
         }
     }

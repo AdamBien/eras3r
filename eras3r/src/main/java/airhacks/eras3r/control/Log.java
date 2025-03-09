@@ -4,11 +4,11 @@ import java.io.PrintStream;
 
 public enum Log {
 
-    DEBUG("\033[0;90m",System.out),
-    INFO("\033[0;33m",System.out),
-    TRACE("\033[2;34m",System.out),
-    WARNING("\033[1;31m",System.out), 
-    ERROR("\033[0;41m",System.err);
+    DEBUG("🐞\033[0;90m",System.out),
+    INFO("💡\033[0;33m",System.out),
+    TRACE("👉\033[2;34m",System.out),
+    WARNING("💥\033[1;31m",System.out), 
+    ERROR("⚠️\033[0;41m",System.err);
 
     private final String template;
     private PrintStream out;
