@@ -22,13 +22,14 @@ public interface BucketEraser {
     }
 
     public static void expireObjectsWithLifecycleRule(S3Client client, String bucketName, int expirationDays) {
-        var lifecycleRule = LifecycleRule.builder()
+        var objectExpirationRule = LifecycleRule.builder()
                 .id("ExpirationRule")
                 .status(ExpirationStatus.ENABLED)
-                .filter(LifecycleRuleFilter.builder().build())
+                .filter(LifecycleRuleFilter.builder()
+                        .prefix(bucketName)
+                        .build())
                 .expiration(LifecycleExpiration.builder()
                         .days(expirationDays)
-                        .expiredObjectDeleteMarker(true)
                         .build())
                 .noncurrentVersionExpiration(NoncurrentVersionExpiration.builder()
                         .noncurrentDays(expirationDays)
@@ -38,8 +39,21 @@ public interface BucketEraser {
                         .build())
                 .build();
 
+        /**
+         * delete markers cannot be specified with expiration period
+         * therefore a standalone rule is required
+         */
+        var deleteMarkersRule = LifecycleRule.builder()
+                .id("DeleteMarkersExpirationRule")
+                .status(ExpirationStatus.ENABLED)
+                .filter(LifecycleRuleFilter.builder().build())
+                .expiration(LifecycleExpiration.builder()
+                        .expiredObjectDeleteMarker(true)
+                        .build())
+                .build();
+
         var lifecycleConfig = BucketLifecycleConfiguration.builder()
-                .rules(List.of(lifecycleRule))
+                .rules(List.of(objectExpirationRule, deleteMarkersRule))
                 .build();
 
         client.putBucketLifecycleConfiguration(req -> req
