@@ -13,6 +13,7 @@ import software.amazon.awssdk.services.s3.model.ExpirationStatus;
 import software.amazon.awssdk.services.s3.model.LifecycleExpiration;
 import software.amazon.awssdk.services.s3.model.LifecycleRule;
 import software.amazon.awssdk.services.s3.model.LifecycleRuleFilter;
+import software.amazon.awssdk.services.s3.model.NoncurrentVersionExpiration;
 
 public interface BucketEraser {
     static boolean isDeleteBucketsWithNameContaining(String bucketName) {
@@ -23,9 +24,12 @@ public interface BucketEraser {
         var lifecycleRule = LifecycleRule.builder()
                 .id("ExpirationRule")
                 .status(ExpirationStatus.ENABLED)
-                .filter(LifecycleRuleFilter.builder().build()) 
+                .filter(LifecycleRuleFilter.builder().build())
                 .expiration(LifecycleExpiration.builder()
                         .days(expirationDays)
+                        .build())
+                .noncurrentVersionExpiration(NoncurrentVersionExpiration.builder()
+                        .noncurrentDays(expirationDays)
                         .build())
                 .build();
 
@@ -42,8 +46,8 @@ public interface BucketEraser {
         try (var client = S3Client.create()) {
             if (isDeleteBucketsWithNameContaining(bucketName)) {
                 var bucketNameFragment = removeStars(bucketName);
-                    Log.WARNING.out("deleting process buckets matching %s".formatted(bucketNameFragment));
-                  deleteMultipleBucketsMatching(client, bucketNameFragment, mode);
+                Log.WARNING.out("deleting process buckets matching %s".formatted(bucketNameFragment));
+                deleteMultipleBucketsMatching(client, bucketNameFragment, mode);
             } else {
                 Log.WARNING.out("deleting single bucket: %s".formatted(bucketName));
                 deleteSingleBucket(client, bucketName, mode);
@@ -57,11 +61,11 @@ public interface BucketEraser {
             return;
         }
 
-        if(mode.equals(Mode.EXPIRE_CONTENTS)){
-            expireObjectsWithLifecycleRule(client, bucketName,1);
+        if (mode.equals(Mode.EXPIRE_CONTENTS)) {
+            expireObjectsWithLifecycleRule(client, bucketName, 1);
             return;
         }
-        if(mode.equals(Mode.DELETE_CONTENTS)){
+        if (mode.equals(Mode.DELETE_CONTENTS)) {
             ObjectsRemover.eraseBucketContents(client, bucketName);
         }
         if (mode.equals(Mode.DELETE_BUCKET)) {
