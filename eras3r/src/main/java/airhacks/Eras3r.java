@@ -70,7 +70,7 @@ public interface Eras3r {
 
     static void main(String... args) {
         System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", String.valueOf(PARALLELISM));
-        Log.INFO.out("eras3r v0.0.21");
+        Log.INFO.out("eras3r v0.0.23");
         if (invalidArguments(args))
             return;
         var bucketName = bucketName(args);
